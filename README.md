@@ -25,11 +25,9 @@ readonly class Post
 $post = new Post('post title');
 
 echo $post->title . PHP_EOL;
-//post title
 
 $post_clone = clone $post;
 echo $post_clone->title . PHP_EOL;
-//cloned title
 
 ```
 
@@ -41,6 +39,13 @@ Stack trace:
 #0 /tmp/8.php(24): Post->__clone()
 #1 {main}
   thrown in /tmp/main.php on line 14
+```
+
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+
+```php
+post title
+cloned title
 ```
 
 ### Typed class constants
@@ -55,12 +60,17 @@ class Post
     const string TITLE = 'this is title';
 }
 echo Post::TITLE . PHP_EOL;
-// this is title
 ```
 
 ![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
 PHP Parse error:  syntax error, unexpected identifier "TITLE", expecting "=" in /tmp/8.php on line 5
+```
+
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+
+```php
+this is title
 ```
 
 ### #[Override] attribute
@@ -91,6 +101,11 @@ echo $admin->methodWithDefaultImplementation();
 ```
 this code works perfectly but if I change `User/methodWithDefaultImplementation` to `methodWithNewImplementation`, what would happen?
 
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
+```php
+2
+```
+
 ![php-version-83](https://shields.io/badge/php->=8.3-blue)
 
 PHP will be able to detect that `Admin::methodWithDefaultImplementation()` doesn't override anything anymore, and it will throw an error:
@@ -98,10 +113,7 @@ PHP will be able to detect that `Admin::methodWithDefaultImplementation()` doesn
 PHP Fatal error:  Admin::methodWithDefaultImplementation() has #[\Override] attribute, but no matching parent method exists in /tmp/8.php on line 14
 ```
 
-![php-version-82](https://shields.io/badge/php-<=8.2-blue)
-```php
-2
-```
+
 
 ### Negative indices in arrays
 
@@ -118,17 +130,17 @@ var_export($array);
 ```
 ![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
-//array (
-//  -5 => 'a',
-//  0 => 'b',
-//)
+array (
+  -5 => 'a',
+  0 => 'b',
+)
 ```
 ![php-version-83](https://shields.io/badge/php->=8.3-blue)
 ```php
-//array (
-//  -5 => 'a',
-//  -4 => 'b',
-//)
+array (
+  -5 => 'a',
+  -4 => 'b',
+)
 ```
 
 ### Anonymous readonly classes
@@ -295,4 +307,77 @@ post comment
 ```php
 post comment
 this is comment
+```
+
+## Magic method closures and named arguments
+Let's say you have a class that supports magic methods:
+
+```php
+class Test {
+    public function __call($name, $args)
+    {
+        var_dump($name, $args);
+    }
+
+    public static function __callStatic($name, $args) {
+        var_dump($name, $args);
+    }
+}
+```
+PHP 8.3 allows you to create closures from those methods, and then pass named arguments to those closures. That wasn't possible before.
+```php
+$test = new Test();
+
+$closure = $test->magic(...);
+
+$closure(a: 'hello', b: 'world'); 
+```
+
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
+```php
+PHP Fatal error:  Uncaught Error: Unknown named parameter $a in /tmp/8.php:18
+Stack trace:
+#0 {main}
+  thrown in /tmp/8.php on line 18
+```
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+```php
+string(5) "magic"
+array(2) {
+  ["a"]=>
+  string(5) "hello"
+  ["b"]=>
+  string(5) "world"
+}
+```
+### Invariant constant visibility
+Previously, visibility for constants weren't checked when implementing an interface. PHP 8.3 fixes this bug, but it might lead to code breaking in some places if you weren't aware of this behaviour.
+
+```php
+<?php
+interface I {
+    public const TITLE = 'this is title';
+}
+
+class Post implements I {
+    private const TITLE = 'post title';
+
+    public function getTitle()
+    {
+        return self::TITLE;
+    }
+}
+
+$c = new Post();
+echo $c->getTitle() . PHP_EOL;
+```
+
+
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
+```php
+post title
+```
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+```php
+PHP Fatal error:  Access level to Post::TITLE must be public (as in interface I) in /tmp/8.php on line 6
 ```
