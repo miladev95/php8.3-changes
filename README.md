@@ -33,7 +33,7 @@ echo $post_clone->title . PHP_EOL;
 
 ```
 
-![php-version-82](https://shields.io/badge/php=<-8.2-blue)
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 
 ```php
 PHP Fatal error:  Uncaught Error: Cannot modify readonly property Post::$title in /tmp/8.php:14
@@ -58,7 +58,7 @@ echo Post::TITLE . PHP_EOL;
 // this is title
 ```
 
-![php-version-82](https://shields.io/badge/php=<-8.2-blue)
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
 PHP Parse error:  syntax error, unexpected identifier "TITLE", expecting "=" in /tmp/8.php on line 5
 ```
@@ -91,12 +91,42 @@ echo $admin->methodWithDefaultImplementation();
 ```
 this code works perfectly but if I change `User/methodWithDefaultImplementation` to `methodWithNewImplementation`, what would happen?
 
-![php-version-82](https://shields.io/badge/php=8.3-blue)
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+
+PHP will be able to detect that `Admin::methodWithDefaultImplementation()` doesn't override anything anymore, and it will throw an error:
 ```php
 PHP Fatal error:  Admin::methodWithDefaultImplementation() has #[\Override] attribute, but no matching parent method exists in /tmp/8.php on line 14
 ```
 
-![php-version-82](https://shields.io/badge/php=<-8.2-blue)
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
 2
+```
+
+### Negative indices in arrays
+
+If you have an empty array, add an item with a negative index, and then add another item, that second item would always start at index 0:
+
+
+```php
+$array = [];
+
+$array[-5] = 'a';
+$array[] = 'b';
+
+var_export($array);
+```
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
+```php
+//array (
+//  -5 => 'a',
+//  0 => 'b',
+//)
+```
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+```php
+//array (
+//  -5 => 'a',
+//  -4 => 'b',
+//)
 ```
