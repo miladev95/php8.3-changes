@@ -130,3 +130,24 @@ var_export($array);
 //  -4 => 'b',
 //)
 ```
+
+### Anonymous readonly classes
+Previously, you weren't able to mark anonymous classes as readonly. That's fixed in PHP 8.3:
+
+```php
+$class = new readonly class {
+    public function __construct(
+        public string $title = 'this is title',
+    ) {}
+};
+
+echo $class->title;
+```
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
+```php
+PHP Parse error:  syntax error, unexpected token "readonly" in /tmp/8.php on line 3
+```
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+```php
+this is title
+```
