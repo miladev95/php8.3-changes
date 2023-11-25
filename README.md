@@ -247,3 +247,52 @@ echo Post::{$name};
 
 // this is title
 ```
+
+### Traits and static properties
+Uses of traits with static properties will now redeclare static properties inherited from the parent class. This will create a separate static property storage for the current class. This is analogous to adding the static property to the class directly without traits.
+
+```php
+<?php
+trait Commentable
+{
+    public static string $comment = 'this is comment';
+}
+
+class Post
+{
+    use Commentable;
+
+    public function getStaticPro()
+    {
+        self::$comment = 'post comment';
+        return self::$comment;
+    }
+}
+
+class Child extends Post
+{
+    use Commentable;
+    
+    public function getStaticPro()
+    {
+        return self::$comment;
+    }
+}
+
+$post = new Post();
+$child = new Child();
+echo $post->getStaticPro() . PHP_EOL;
+echo $child->getStaticPro() . PHP_EOL;
+```
+
+
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
+```php
+post comment
+post comment
+```
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+```php
+post comment
+this is comment
+```
