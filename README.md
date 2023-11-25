@@ -181,3 +181,40 @@ if (json_validate($json_string)) {
 
 // Valid JSON string
 ```
+
+### `Randomizer` additions
+PHP 8.2 added the new Randomizer class. This update brings some small additions:
+
+```php
+<?php
+
+use Random\Randomizer;
+
+$random = new Randomizer();
+echo $random->getBytesFromString('milad',2);
+
+// ma
+```
+
+`getFloat()` returns a float between $min and $max
+```php
+<?php
+
+use Random\Randomizer;
+
+$random = new Randomizer();
+echo $random->getFloat(min: 1,max: 10);
+//4.2490697405757
+```
+
+`nextFloat()` is a shorthand for `getFloat(0, 1, IntervalBoundary::ClosedOpen)`, in other words: it'll give you a random float between 0 and 1, where 1 is excluded.
+```php
+<?php
+
+use Random\Randomizer;
+
+$random = new Randomizer();
+echo $random->nextFloat();
+// 0.13968670649046
+```
+
