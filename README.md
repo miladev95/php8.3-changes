@@ -151,3 +151,33 @@ PHP Parse error:  syntax error, unexpected token "readonly" in /tmp/8.php on lin
 ```php
 this is title
 ```
+### The new `json_validate()` function
+Previously, the only way to validate whether a string was valid JSON, was to decode it and detect whether any errors were thrown. This new json_validate() function is beneficial if you only need to know whether the input is valid JSON, since it uses less memory compared to decoding the string.
+
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
+```php
+function is_valid_json($json_string) {
+    $json_data = json_decode($json_string);
+    return (json_last_error() === JSON_ERROR_NONE) ? true : false;
+}
+
+$json_string = '{"name": "John Doe", "age": 30}';
+if (is_valid_json($json_string)) {
+    echo "Valid JSON string";
+} else {
+    echo "Invalid JSON string";
+}
+
+// Valid JSON string
+```
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+```php
+$json_string = '{"name": "John Doe", "age": 30}';
+if (json_validate($json_string)) {
+    echo "Valid JSON string";
+} else {
+    echo "Invalid JSON string";
+}
+
+// Valid JSON string
+```
