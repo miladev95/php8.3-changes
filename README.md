@@ -217,4 +217,33 @@ $random = new Randomizer();
 echo $random->nextFloat();
 // 0.13968670649046
 ```
+### Dynamic class constant fetch
+PHP 8.3 allows you to fetch constants with a more dynamic syntax:
 
+![php-version-82](https://shields.io/badge/php-<=8.2-blue)
+```php
+<?php
+class Post
+{
+    const TITLE = 'this is title';
+}
+
+$name = 'TITLE';
+
+echo constant(Post::class . '::' . $name);
+// this is title
+```
+![php-version-83](https://shields.io/badge/php->=8.3-blue)
+```php
+<?php
+class Post
+{
+    const TITLE = 'this is title';
+}
+
+$name = 'TITLE';
+
+echo Post::{$name};
+
+// this is title
+```
