@@ -1,5 +1,27 @@
 # PHP 8.3 Changes
 
+I suggest you look at the below resource:
+- [Stitcher's blog](https://stitcher.io/blog)
+
+## Table of Contents
+
+- [PHP 8.3 Changes](#php-8.1-changes)
+    * [Changes](#changes)
+        + [Readonly amendments](#readonly-amendments)
+        + [Typed class constants](#typed-class-constants)
+        + [#[Override] attribute](##[Override]-attribute)
+        + [Negative indices in arrays](#negative-indices-in-arrays)
+        + [Anonymous readonly classes](#anonymous-readonly-classes)
+        + [The new `json_validate()` function](#The-new-json_validate()-function)
+        + [`Randomizer` additions](#Randomizer-additions)
+        + [Dynamic class constant fetch](#dynamic-class-constant-fetch)
+        + [Traits and static properties](#traits-and-static-properties)
+        + [Magic method closures and named arguments](#magic-method-closures-and-named-arguments)
+        + [Invariant constant visibility](#invariant-constant-visibility)
+
+
+## Changes 
+
 ### Readonly amendments
 
 overwriting readonly property values within __clone(), in order to allow deep cloning readonly properties:
@@ -34,9 +56,9 @@ echo $post_clone->title . PHP_EOL;
 ![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 
 ```php
-PHP Fatal error:  Uncaught Error: Cannot modify readonly property Post::$title in /tmp/8.php:14
+PHP Fatal error:  Uncaught Error: Cannot modify readonly property Post::$title in /tmp/main.php:14
 Stack trace:
-#0 /tmp/8.php(24): Post->__clone()
+#0 /tmp/main.php(24): Post->__clone()
 #1 {main}
   thrown in /tmp/main.php on line 14
 ```
@@ -64,7 +86,7 @@ echo Post::TITLE . PHP_EOL;
 
 ![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
-PHP Parse error:  syntax error, unexpected identifier "TITLE", expecting "=" in /tmp/8.php on line 5
+PHP Parse error:  syntax error, unexpected identifier "TITLE", expecting "=" in /tmp/main.php on line 5
 ```
 
 ![php-version-83](https://shields.io/badge/php->=8.3-blue)
@@ -99,7 +121,7 @@ $admin = new Admin();
 
 echo $admin->methodWithDefaultImplementation();
 ```
-this code works perfectly but if I change `User/methodWithDefaultImplementation` to `methodWithNewImplementation`, what would happen?
+This code works perfectly, but if I change `User/methodWithDefaultImplementation` to `methodWithNewImplementation`, what will happen?
 
 ![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
@@ -110,7 +132,7 @@ this code works perfectly but if I change `User/methodWithDefaultImplementation`
 
 PHP will be able to detect that `Admin::methodWithDefaultImplementation()` doesn't override anything anymore, and it will throw an error:
 ```php
-PHP Fatal error:  Admin::methodWithDefaultImplementation() has #[\Override] attribute, but no matching parent method exists in /tmp/8.php on line 14
+PHP Fatal error:  Admin::methodWithDefaultImplementation() has #[\Override] attribute, but no matching parent method exists in /tmp/main.php on line 14
 ```
 
 
@@ -157,7 +179,7 @@ echo $class->title;
 ```
 ![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
-PHP Parse error:  syntax error, unexpected token "readonly" in /tmp/8.php on line 3
+PHP Parse error:  syntax error, unexpected token "readonly" in /tmp/main.php on line 3
 ```
 ![php-version-83](https://shields.io/badge/php->=8.3-blue)
 ```php
@@ -335,10 +357,10 @@ $closure(a: 'hello', b: 'world');
 
 ![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
-PHP Fatal error:  Uncaught Error: Unknown named parameter $a in /tmp/8.php:18
+PHP Fatal error:  Uncaught Error: Unknown named parameter $a in /tmp/main.php:18
 Stack trace:
 #0 {main}
-  thrown in /tmp/8.php on line 18
+  thrown in /tmp/main.php on line 18
 ```
 ![php-version-83](https://shields.io/badge/php->=8.3-blue)
 ```php
@@ -379,5 +401,5 @@ post title
 ```
 ![php-version-83](https://shields.io/badge/php->=8.3-blue)
 ```php
-PHP Fatal error:  Access level to Post::TITLE must be public (as in interface I) in /tmp/8.php on line 6
+PHP Fatal error:  Access level to Post::TITLE must be public (as in interface I) in /tmp/main.php on line 6
 ```
