@@ -111,7 +111,7 @@ class User
 class Admin extends User
 {
     #[Override]
-    public function methodWithDefaultImplementation(): int
+    public function methodWithNewImplementation(): int
     {
         return 2; // The overridden method
     }
@@ -119,9 +119,9 @@ class Admin extends User
 
 $admin = new Admin();
 
-echo $admin->methodWithDefaultImplementation();
+echo $admin->methodWithNewImplementation();
 ```
-This code works perfectly, but if I change `User/methodWithDefaultImplementation` to `methodWithNewImplementation`, what will happen?
+if I changed `User/methodWithDefaultImplementation` to `methodWithNewImplementation`, what will happen?
 
 ![php-version-82](https://shields.io/badge/php-<=8.2-blue)
 ```php
